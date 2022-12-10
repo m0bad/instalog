@@ -27,8 +27,9 @@ export const EVENTS_SEEDS = Array.from({ length: 1000 }).map(() => ({
     id: casual.uuid,
     actorId: getRandomUser().id,
     targetId: getRandomUser().id,
-    group: casual.random_element(['USER', 'ADMIN']),
-    location: casual.city,
+    group: casual.domain,
+    location: casual.ip,
+    occurred_at: casual.date('YYYY-MM-DDTHH:mm:ss.SSSZ'),
     metadata: {
         redirect: casual.url,
         description: casual.description,
