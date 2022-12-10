@@ -9,3 +9,48 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Event {
+  id          String   @id @default(cuid())
+  actor       User     @relation("EventToActor", fields: [actorId], references: [id])
+  actorId     String
+  target      User     @relation("EventToTarget", fields: [targetId], references: [id])
+  targetId    String
+  group       String
+  action      Action?
+  location    String
+  occurred_at DateTime @default(now())
+  metadata    Json
+}
+
+model User {
+  id             String   @id @default(cuid())
+  name           String
+  email          String   @unique
+  password       String
+  role           Role     @default(USER)
+  eventsAsActor  Event[]  @relation("EventToActor")
+  eventsAsTarget Event[]  @relation("EventToTarget")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Action {
+  id        String     @id @default(cuid())
+  name      ActionName
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  event     Event      @relation(fields: [eventId], references: [id])
+  eventId   String     @unique
+}
+
+enum ActionName {
+  USER_LOGIN_SUCCESS
+  USER_LOGIN_FAILURE
+  USER_LOGOUT
+}
+
+enum Role {
+  ADMIN
+  USER
+}
