@@ -6,7 +6,9 @@ module.exports = {
     content: [
         join(__dirname, 'pages/**/*.{js,ts,jsx,tsx}'),
         join(__dirname, 'components/**/*.{js,ts,jsx,tsx}'),
+        './node_modules/tw-elements/dist/js/**/*.{js,ts,jsx,tsx}',
     ],
+    important: true,
     enabled: process.env.NODE_ENV === 'production',
     theme: {
         extend: {
@@ -24,5 +26,5 @@ module.exports = {
             },
         },
     },
-    plugins: [],
+    plugins: [require('tw-elements/dist/plugin')],
 }
