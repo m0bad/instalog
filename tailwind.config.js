@@ -4,6 +4,7 @@ module.exports = {
         './Pages/**/*.{js,ts,jsx,tsx}',
         './Components/**/*.{js,ts,jsx,tsx}',
     ],
+    enabled: process.env.NODE_ENV === 'production',
     theme: {
         extend: {
             colors: {
