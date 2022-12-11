@@ -3,8 +3,8 @@ module.exports = {
     content: [
         './Pages/**/*.{js,ts,jsx,tsx}',
         './Components/**/*.{js,ts,jsx,tsx}',
+        './app/**/*.{js,ts,jsx,tsx}',
     ],
-    enabled: process.env.NODE_ENV === 'production',
     theme: {
         extend: {
             colors: {
