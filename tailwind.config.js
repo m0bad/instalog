@@ -1,9 +1,11 @@
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const {join} =  require('path')
+
 module.exports = {
     content: [
-        './Pages/**/*.{js,ts,jsx,tsx}',
-        './Components/**/*.{js,ts,jsx,tsx}',
-        './app/**/*.{js,ts,jsx,tsx}',
+        join(__dirname, 'pages/**/*.{js,ts,jsx,tsx}'),
+        join(__dirname, 'components/**/*.{js,ts,jsx,tsx}'),
     ],
     theme: {
         extend: {
