@@ -1,15 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { join } = require('path')
-
 module.exports = {
     content: [
-        join(__dirname, 'pages/**/*.{js,ts,jsx,tsx}'),
-        join(__dirname, 'components/**/*.{js,ts,jsx,tsx}'),
-        './node_modules/tw-elements/dist/js/**/*.{js,ts,jsx,tsx}',
+        './pages/**/*.{js,ts,jsx,tsx}',
+        './components/**/*.{js,ts,jsx,tsx}',
     ],
-    important: true,
-    enabled: process.env.NODE_ENV === 'production',
     theme: {
         extend: {
             colors: {
@@ -26,7 +20,4 @@ module.exports = {
             },
         },
     },
-    plugins: [
-        require('tw-elements/dist/plugin')
-    ],
 }
