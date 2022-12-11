@@ -48,6 +48,10 @@ export default async function handler(
             const [events, eventsCount] = await Promise.all([
                 prisma.event.findMany({
                     where: filterQuery,
+                    include: {
+                        actor: true,
+                        action: true,
+                    },
                     ...paginationQuery,
                     ...(sort_by && {
                         orderBy: {
