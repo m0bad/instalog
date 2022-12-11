@@ -64,9 +64,12 @@ export default async function handler(
                 }),
             ])
 
+            const nextCursor = events[events.length - 1]?.id
+
             return res.status(200).json({
                 items: events,
                 count: eventsCount,
+                nextCursor,
             })
         } catch (err) {
             console.error(err)
