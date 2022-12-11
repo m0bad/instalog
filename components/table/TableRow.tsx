@@ -1,13 +1,52 @@
-export const TableRow = () => {
+import { TableHeadersProps } from './index'
+import { PropsWithChildren } from 'react'
+
+type Props<ObjectType> = {
+    object: ObjectType & { id: string }
+    headers: TableHeadersProps<ObjectType>
+}
+
+export const TableRow = <ObjectType,>(
+    props: PropsWithChildren<Props<ObjectType>>
+) => {
+    const { object, headers } = props
+
+    const renderByType = (header: TableHeadersProps<ObjectType>[number]) => {
+        const path = header.key.toString()
+        const value = path.split('.').reduce((acc: ObjectType, key) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            return acc[key]
+        }, object)
+
+        switch (header.type) {
+            case 'avatar':
+                return (
+                    <td key={object.id} className="py-4 px-8 flex items-center">
+                        <>
+                            <Avatar letter={(value as string)[0]} />
+                            {value}
+                        </>
+                    </td>
+                )
+            case 'date':
+                return (
+                    <td key={header.key.toString()} className={'px-6 py-4'}>
+                        {formatDate(new Date(value as string))}
+                    </td>
+                )
+            default:
+                return (
+                    <td key={header.key.toString()} className={'px-6 py-4'}>
+                        {value as string}
+                    </td>
+                )
+        }
+    }
+
     return (
         <tr className="bg-white text-table-primary">
-            <td className="py-4 px-8 flex items-center">
-                <Avatar letter={'M'} />
-                Sliver
-            </td>
-            <td className="py-4 px-6">Sliver</td>
-            <td className="py-4 px-6">Laptop</td>
-            <td className="py-4 px-6">$2999</td>
+            {headers.map((header) => renderByType(header))}
             <td className="py-4 px-6">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -35,4 +74,13 @@ const Avatar = ({ letter }: { letter: string }) => {
             <span className="text-white font-semibold">{letter}</span>
         </div>
     )
+}
+
+const formatDate = (date: Date) => {
+    return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+    })
 }

@@ -1,9 +1,38 @@
+import React from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Table } from '../components/table'
+import useSWRInfinite from 'swr/infinite'
+import { Table, TableHeadersProps } from '../components/table'
 import { SearchInput } from '../components/input/Search/SearchInput'
+import { Event } from '@prisma/client'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
+const PAGE_SIZE = 10
+
+const EVENTS_HEADERS = [
+    { key: 'actor.name', label: 'Actor', type: 'avatar' },
+    { key: 'action.name', label: 'Action', type: 'text' },
+    { key: 'occurred_at', label: 'Date', type: 'date' },
+]
 
 const Home: NextPage = () => {
+    const { data, error, size, setSize, isValidating } = useSWRInfinite(
+        (page: number, previousPageData) =>
+            previousPageData
+                ? `api/events?page_size=${PAGE_SIZE}&cursor=${previousPageData.nextCursor}`
+                : `api/events?page_size=${PAGE_SIZE}`,
+        fetcher
+    )
+
+    const isLoadingInitialData = !data && !error
+    const isLoadingMore =
+        isLoadingInitialData ||
+        (size > 0 && data && typeof data[size - 1] === 'undefined')
+    const isRefreshing = isValidating && data && data.length === size
+
+    const events = data ? data.map((i) => i.items).flat() : []
+
     return (
         <div className={'flex justify-center my-24'}>
             <Head>
@@ -20,7 +49,18 @@ const Home: NextPage = () => {
                 }
             >
                 <SearchInput />
-                <Table />
+                {/*{TODO}*/}
+                {/*{isEmpty && We need to handle this}*/}
+                <Table
+                    paginationParams={{
+                        isLoadingMore,
+                        isRefreshing,
+                        setSize,
+                        size,
+                    }}
+                    headers={EVENTS_HEADERS as TableHeadersProps<Event>}
+                    objects={events}
+                />
             </main>
         </div>
     )
