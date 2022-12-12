@@ -6,8 +6,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        import('tw-elements');
-    }, []);
+        import('tw-elements')
+    }, [])
     return <Component {...pageProps} />
 }
 
