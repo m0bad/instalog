@@ -4,9 +4,10 @@
     "private": true,
     "scripts": {
         "dev": "next dev",
-        "build": "next build",
+        "build": "yarn build:css && next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "build:css": "NODE_ENV=production tailwindcss -o src/tailwind.css -m"
     },
     "prisma": {
         "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seeds/seed.ts"
