@@ -7,9 +7,8 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    // Cursor-based pagination
-    if (req.method === 'GET') {
-        try {
+    try {
+        if (req.method === 'GET') {
             // TODO: Add validation
             const {
                 search_term,
@@ -71,12 +70,25 @@ export default async function handler(
                 count: eventsCount,
                 nextCursor,
             })
-        } catch (err) {
-            console.error(err)
-            return res.status(500).json({ err })
+        } else if (req.method === 'POST') {
+            // TODO: Add validation
+            const { actor,  target, location, group, metadata } = req.body
+
+            const event = await prisma.event.create({
+                data: {
+                    actorId: actor,
+                    targetId: target,
+                    group,
+                    location,
+                    metadata,
+                },
+            })
+
+            return res.status(200).json(event)
         }
-    } else if (req.method === 'POST') {
-        // Create a new Event
+        return res.status(200).json({})
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ err })
     }
-    return res.status(200).json({})
 }
