@@ -5,6 +5,7 @@ import useSWRInfinite from 'swr/infinite'
 import { Table, TableHeadersProps } from '../components/table'
 import { SearchInput } from '../components/input/Search/SearchInput'
 import { Event } from '@prisma/client'
+import { useDebounce } from '../hooks/useDebounce'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -17,11 +18,13 @@ const EVENTS_HEADERS = [
 ]
 
 const Home: NextPage = () => {
+    const [searchTerm, setSearchTerm] = React.useState('')
+    const debouncedSearchTerm = useDebounce(searchTerm, 500)
     const { data, error, size, setSize, isValidating } = useSWRInfinite(
         (page: number, previousPageData) =>
             previousPageData
-                ? `api/events?page_size=${PAGE_SIZE}&cursor=${previousPageData.nextCursor}`
-                : `api/events?page_size=${PAGE_SIZE}`,
+                ? `api/events?page_size=${PAGE_SIZE}&cursor=${previousPageData.nextCursor}&search_term=${debouncedSearchTerm}`
+                : `api/events?page_size=${PAGE_SIZE}&search_term=${debouncedSearchTerm}`,
         fetcher
     )
 
@@ -48,7 +51,7 @@ const Home: NextPage = () => {
                     'place-items-center bg-white border-2 rounded-xl w-10/12'
                 }
             >
-                <SearchInput />
+                <SearchInput value={searchTerm} onChange={setSearchTerm} />
                 {/*{TODO}*/}
                 {/*{isEmpty && We need to handle this}*/}
                 <Table
